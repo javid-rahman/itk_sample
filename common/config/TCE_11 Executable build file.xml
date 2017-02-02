@@ -1,0 +1,407 @@
+<?xml version="1.0"?>
+  <project name="IMAN Customizations" default="build" basedir=".">
+
+  <!-- ########################################################################## -->
+  <!-- Load the Files required by ANT to Compile and Link C/C++ programs      -->
+  <!-- ########################################################################## -->
+
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+  <taskdef name="cc"       classname="net.sf.antcontrib.cpptasks.CCTask"/>
+  <typedef name="linker"   classname="net.sf.antcontrib.cpptasks.LinkerDef" />
+  <typedef name="compiler" classname="net.sf.antcontrib.cpptasks.CompilerDef" />
+
+      <tstamp>
+              <format property="TODAY_DIR" pattern="yyyyMMdd"/>
+      </tstamp>
+      <tstamp>
+              <format property="touch.time" pattern="yyyyMMdd_hhmmss"/>
+      </tstamp> 
+    
+    <!-- ########################################################################## -->
+    <!-- Initialize iMAN Directories                  -->
+    <!-- ########################################################################## -->
+
+    <target name="iman-init">
+      <property name="msdev.root"  value="${MSVS_ROOT}"/>    
+      <property name="iman.root" value="${IMAN_ROOT_PATH}"/>
+      <property name="iman.include"  value="${iman.root}/include" />
+      <property name="iman.includecpp"  value="${iman.root}/include_cpp" />
+
+    </target>
+    
+  <!-- ########################################################################## -->
+  <!-- Define only those Arguments and defines that will be used to
+         compile both iMAN and UG file on Windows                  -->
+  <!-- ########################################################################## -->
+
+
+   <compiler id="base-msvc-compiler" name="msvc">
+          <compilerarg value="-c" />
+          <compilerarg value="-nologo" />
+          <compilerarg value="-EHsc" />
+          <compilerarg value="-W1" />
+          <compilerarg value="-Zi" />   
+          <compilerarg value="-Ox" />
+          <compilerarg value="-Oy" />
+          <compilerarg value="-MD" />
+        <defineset>
+          <define name="IPLIB=none" />
+           <define name="STEP" />
+          <define name="AP203" />
+          <define name="AP214" />
+          <define name="WIN32_LEAN_AND_MEAN" />
+          <define name="WNT" />
+          <define name="_CRT_SECURE_NO_DEPRECATE" />
+          <define name="_CRT_NONSTDC_NO_DEPRECATE" />
+          <define name="_SECURE_SCL=0" />
+          <define name="_HAS_TR1=0" />
+          <define name="WNT" />
+          <define name="_WIN32" />
+          <define name="WIN32" />
+          <define name="_WIN64" />
+          <define name="_INTEL=1" />
+          <define name="CRTAPI1=_cdecl" />
+          <define name="CRTAPI2=cdecl" />
+          <define name="IMAN_TAO" />
+          <define name="BYPASS_FLEX" />
+          <define name="POMDLL" />
+        </defineset>
+            </compiler>
+        
+      <!-- ########################################################################## -->
+    <!-- Define only those Arguments and defines that will be used to
+             link both iMAN and UG file on Windows
+    -->
+    <!-- ########################################################################## -->
+
+
+    <linker id="base-msvc-linker" name="msvc">        
+          <linkerarg value="-MACHINE:X64" />
+          <linkerarg value="-debug" />
+          <linkerarg value="-nologo" />
+          <linkerarg value="-subsystem:console" />
+          <linkerarg value="-manifest" />
+          <linkerarg value="-ignore:4199" />
+          <linkerarg value="-delayload:libtcsso.dll" />
+          <linkerarg value="-delayload:libae.dll" />
+          <linkerarg value="-delayload:libappr.dll " />
+          <linkerarg value="-delayload:libarchive.dll " />
+          <linkerarg value="-delayload:libbackup.dll " />
+          <linkerarg value="-delayload:libbom.dll " />
+          <linkerarg value="-delayload:libcfm.dll " />
+          <linkerarg value="-delayload:libconstants.dll " />
+          <linkerarg value="-delayload:libdmi.dll " />
+          <linkerarg value="-delayload:libecm.dll " />
+          <linkerarg value="-delayload:libeint.dll " />
+          <linkerarg value="-delayload:libepm.dll " />
+          <linkerarg value="-delayload:libform.dll " />
+          <linkerarg value="-delayload:libgms.dll " />
+          <linkerarg value="-delayload:libgrm.dll " />
+          <linkerarg value="-delayload:libtccore.dll " />
+          <linkerarg value="-delayload:libtctrushape.dll " />
+          <linkerarg value="-delayload:libinternal_exits.dll " />
+          <linkerarg value="-delayload:libvalidation.dll " />
+          <linkerarg value="-delayload:libitk.dll " />
+          <linkerarg value="-delayload:liblov.dll " />
+          <linkerarg value="-delayload:libme.dll " />
+          <linkerarg value="-delayload:libmgc.dll " />
+          <linkerarg value="-delayload:libobjio.dll " />
+          <linkerarg value="-delayload:libpie.dll " />
+          <linkerarg value="-delayload:libai.dll " />
+          <linkerarg value="-delayload:libwproxy.dll " />
+          <linkerarg value="-delayload:libps.dll " />
+          <linkerarg value="-delayload:libpublication.dll " />
+          <linkerarg value="-delayload:libqry.dll " />
+          <linkerarg value="-delayload:libclips.dll " />
+          <linkerarg value="-delayload:libclipsutil.dll " />
+          <linkerarg value="-delayload:librbf.dll " />
+          <linkerarg value="-delayload:libce.dll " />
+          <linkerarg value="-delayload:libres.dll " />
+          <linkerarg value="-delayload:libstep.dll " />
+          <linkerarg value="-delayload:libsub_mgr.dll " />
+          <linkerarg value="-delayload:libtrv.dll " />
+          <linkerarg value="-delayload:libtie.dll " />
+          <linkerarg value="-delayload:libnxmgr_im.dll " />
+          <linkerarg value="-delayload:libaie.dll " />
+          <linkerarg value="-delayload:libics.dll " />
+          <linkerarg value="-delayload:libeintstub.dll " />
+          <linkerarg value="-delayload:libsml.dll " />
+          <linkerarg value="-delayload:libuser_exits.dll " />
+          <linkerarg value="-delayload:librdv.dll " />
+          <linkerarg value="-delayload:libcollabctx.dll " />
+          <linkerarg value="-delayload:libmechatronics.dll " />
+          <linkerarg value="-delayload:libtccoreext.dll " />
+          <linkerarg value="-delayload:libusagewc.dll " />
+          <linkerarg value="-delayload:libusage.dll " />
+          <linkerarg value="-delayload:libcontmgmt.dll " />
+          <linkerarg value="-delayload:libtc_utils.dll " />
+          <linkerarg value="-delayload:libschmgt.dll " />
+          <linkerarg value="-delayload:libschmgt_bridge.dll " />
+          <linkerarg value="-delayload:libsmengine.dll " />
+          <linkerarg value="-delayload:libsmanalytics.dll " />
+          <linkerarg value="-delayload:libdocmgt.dll " />
+          <linkerarg value="-delayload:libdocmgtapp.dll " />
+          <linkerarg value="-delayload:libvm.dll " />
+          <linkerarg value="-delayload:libadsfoundationdispatch.dll " />
+          <linkerarg value="-delayload:libcm.dll " />
+          <linkerarg value="-delayload:libcmdispatch.dll " />
+          <linkerarg value="-delayload:libconstants.dll " />
+          <linkerarg value="-delayload:libbase_utils.dll " />
+          <linkerarg value="-delayload:libfoundationbase.dll " />
+          <linkerarg value="-delayload:libmld.dll " />
+          <linkerarg value="-delayload:libfunctionality.dll " />
+          <linkerarg value="-delayload:libFnd0formulamgmt.dll " />
+          <linkerarg value="-delayload:libFnd0audit_mgr.dll " />
+   
+          <libset dir="${msdev.root}/VC/lib/amd64" libs="msvcprt,msvcrt, oldnames, kernel32,delayimp"/>
+        	<libset dir="${msdev.root}/PlatformSDK/Lib/x64" libs="uuid,wsock32,advapi32,winmm"/>
+    	  </linker>
+    
+    <!-- ########################################################################## -->
+    <!-- Compile and link External ITK          -->
+    <!-- ########################################################################## -->
+
+    <target name="SelectAndCompile" depends="iman-init">
+        
+      <property name="common_obj_dir" value="${dest}/${module}/build/common"/>
+      <mkdir dir="${common_obj_dir}"/>
+            
+      <!--compile common -->
+      <for list="${outname}" param="execname" trim="true">
+      	<sequential>
+			  <echo message = " compile common code"/>
+              <mkdir dir="${dest}/${module}/common/source/all"/>
+              <mkdir dir="${dest}/${module}/common/source/wintel"/>
+              
+            <antcall target="compileCommonCode">
+                     <param name="common_obj_dir" value="${common_obj_dir}"/>
+            </antcall>
+               
+              <echo message = "copyproperty"/>
+        
+                <copy filtering="true" todir="${dest}/${module}/dist/config">
+                <fileset dir="${dest}/${module}/common/config" casesensitive="no">
+                  <exclude name="**/*.gif"/>
+                  <exclude name="**/*.jpg"/>
+                  <exclude name="**/*.bmp"/>
+                  <exclude name="**/*.png"/>
+                </fileset>
+                </copy>
+          
+                <copy filtering="false" todir="${dest}/${module}/dist/config">
+                <fileset dir="${dest}/${module}/common/config" casesensitive="no">
+                  <include name="**/*.gif"/>
+                  <include name="**/*.jpg"/>
+                  <include name="**/*.bmp"/>
+                  <include name="**/*.png"/>
+                </fileset>
+                </copy>
+      		</sequential>
+      	</for>
+      <!--end compile common -->
+      <for list="${outname}" param="execname" trim="true">
+      	<sequential>
+          <echo message = "execname = @{execname} "/>
+          <property name="obj_dir@{execname}" value="${dest}/${module}/build/@{execname}"/>
+          
+          <mkdir dir="${obj_dir@{execname}}"/>
+          <mkdir dir="${dest}/${module}/@{execname}/source/all"/>
+          <mkdir dir="${dest}/${module}/@{execname}/include/all"/>
+
+          <echo message = " call compile"/>
+          
+          <antcall target="compileCode">
+            <param name="execname" value="@{execname}"/>
+            <param name="obj_dir" value="${obj_dir@{execname}}"/>
+          </antcall>
+          
+          <echo message = "call linker"/>
+          
+          <antcall target="executeLinker">
+             <param name="execname" value="@{execname}"/>
+             <param name="obj_dir" value="${obj_dir@{execname}}"/>
+             <param name="common_obj_dir" value="${common_obj_dir}"/>
+           </antcall>
+           <antcall target="copy_dest">
+             <param name="execname" value="@{execname}"/>
+           </antcall>
+      	</sequential>
+    </for>     
+    </target>
+
+    <target name="compileCommonCode">
+       <cc objdir="${common_obj_dir}" outtype="executable" failonerror="true" rebuild="false">
+         <fileset dir="${dest}/${module}/common/source/all" >
+               <include name="**/*.c" />
+               <include name="**/*.cpp" />
+               <include name="**/*.cxx" />
+         </fileset>
+         <fileset dir="${dest}/${module}/common/source/wintel" >
+               <include name="**/*.c" />
+               <include name="**/*.cpp" />
+               <include name="**/*.cxx" />
+        </fileset>
+          
+        <compiler extends="base-msvc-compiler">
+          <includepath location="${iman.include}"/>
+          <includepath location="${iman.includecpp}"/>
+          <includepath location="${msdev.root}/VC/include" />
+          <includepath location="${msdev.root}/PlatformSDK/Include" />            
+          <includepath location="${dest}/${module}/common/include/all" if="common_all"/>
+        </compiler>
+    </cc>           
+    </target>
+    
+    <target name="compileCode">
+    <echo message = "execname = ${execname}"/>
+       <cc objdir="${obj_dir}" outtype="executable" failonerror="true" rebuild="false">
+         <fileset dir="${dest}/${module}/${execname}/source/all" >
+               <include name="**/*.c" />
+               <include name="**/*.cpp" />
+               <include name="**/*.cxx" />
+         </fileset>
+
+        <compiler extends="base-msvc-compiler">
+          <includepath location="${iman.include}"/>
+          <includepath location="${iman.includecpp}"/>
+          <includepath location="${msdev.root}/VC/include" />
+          <includepath location="${msdev.root}/PlatformSDK/Include" />
+          <includepath location="${dest}/${module}/${execname}/include/all" />
+          <includepath location="${dest}/${module}/${execname}/include/wintel" />
+          <includepath location="${dest}/${module}/common/include/all" if="common_all"/>        
+        </compiler>
+      </cc>
+    </target>
+
+    <target name="executeLinker">        
+		<cc outtype="executable" outfile="${dest}/${module}/dist/${execname}" subsystem="console"  failonerror="true" rebuild="false">
+        <linker extends="base-msvc-linker">
+        <!-- <syslibset libs="${SYSLIBDEPENDENCE}" dir="D:/javateam/BuilderAgent6/${common_lib_folder}" if="SYSLIBDEPENDENCE"/> -->
+          <fileset dir="${obj_dir}" >
+            <include name="*.obj" />
+          </fileset>
+          <fileset dir="${common_obj_dir}">
+            <include name="*.obj" />
+          </fileset>
+          <fileset dir="${dest}/${module}/common/lib" if="common_lib">
+               <include name="*.lib" />
+          </fileset>            
+          <fileset dir="${IMAN_ROOT_PATH}/lib" unless="exclude_oci_lib">
+               <include name="*.lib" />
+          </fileset>
+          <fileset dir="${IMAN_ROOT_PATH}/lib" if="exclude_oci_lib">
+               <include name="*.lib" />
+             <exclude name="oci.lib" />
+          </fileset>          
+               <fileset dir="${IMAN_ROOT_PATH}/lib" unless="exclude_itk_obj">
+               <include name="itk_main.obj" />  
+          </fileset>    
+              
+        </linker>
+      </cc>
+        <exec executable="${MSVS_ROOT}/PlatformSDK/bin/x64/mt" failonerror="true">
+          <arg line="-manifest ${dest}/${module}/dist/${execname}.exe.manifest"/>
+          <arg line="-outputresource:${dest}/${module}/dist/${execname}.exe"/>
+        </exec>  
+    </target>
+  	
+  	<target name="copy_dest">
+  	          <!-- <if>
+  	      <equals arg1="${executeDeploy}" arg2="Y" />
+  	      <then>     
+  	      
+  	      <echo>Check if destination folder exists</echo>
+  	        <sshexec host="${dest_server}" username="infodba" password="xxxx" trust="yes" command="mkdir -p ${dest_folder}">
+  	        </sshexec>
+  	        
+  	      <echo>Copy on destination machine</echo>
+  	      <scp trust="true" file="${dest}/${module}/dist/${execname}.exe" todir='infodba:xxxx@${dest_server}:"${dest_folder}"' />
+  	      <scp trust="true" file="${dest}/${module}/dist/${execname}.pdb" todir='infodba:xxxx@${dest_server}:"${dest_folder}"' />
+  	      <scp trust="true" file="${dest}/${module}/dist/${execname}.exe.manifest" todir='infodba:xxxx@${dest_server}:"${dest_folder}"' />
+  	      </then>
+  	 </if>  -->     
+  	    </target>
+  	    
+  	    <target name="copy_bin" depends="SelectAndCompile" if="dest_server_bin">
+  	         <!-- <if>
+  	      <equals arg1="${executeDeploy}" arg2="Y" />
+  	      <then>
+  	         <echo>Check if destination folder exists</echo>
+  	   <if>
+  	          <equals arg1="${dest_server_bin}" arg2= "tnwp08902.genpitfi01.og.ge.com" />
+  	        
+  	        <then>
+  	        <sshexec host="${dest_server_bin}" username="javateam" password="xxxx" trust="yes" command="[ -d ${dest_folder_bin} ]">
+  	      </sshexec>
+  	    <echo> copy script to ${dest_server_bin}, ${dest_folder_bin} </echo>
+  	    <scp trust="true" password="xxxx" todir="javateam@${dest_server_bin}:${dest_folder_bin}" >
+  	      <fileset dir="${dest}/${module}/dist/scripts/wnd"/>
+  	    </scp>
+  	        </then>
+  	         
+  	<elseif>
+  	          <equals arg1="${dest_server_bin}" arg2="TNWQ08913.genpitfi01.og.ge.com" />
+  	        
+  	        <then>
+  	        <sshexec host="${dest_server_bin}" username="javateam" password="xxxx" trust="yes" command="[ -d ${dest_folder_bin} ]">
+  	      </sshexec>
+  	    <echo> copy script to ${dest_server_bin}, ${dest_folder_bin} </echo>
+  	    <scp trust="true" password="xxxx" todir="javateam@${dest_server_bin}:${dest_folder_bin}" >
+  	      <fileset dir="${dest}/${module}/dist/scripts/wnd"/>
+  	    </scp>
+  	        </then>
+  	 </elseif>
+  	         
+  	          <else>
+  	            <sshexec host="${dest_server_bin}" username="javateam" password="xxxx" trust="yes" command="[ -d ${dest_folder_bin} ]">
+  	      </sshexec>
+  	    <echo> copy script to ${dest_server_bin}, ${dest_folder_bin} </echo>
+  	    <scp trust="true" password="xxxx" todir="javateam@${dest_server_bin}:${dest_folder_bin}" >
+  	      <fileset dir="${dest}/${module}/dist/scripts/wnd"/>
+  	    </scp>
+  	        </else>
+
+  	      </if>     
+  	       </then>
+  	 </if>  -->   
+  	   </target>   
+  	  <target name="copy_config" depends="copy_bin" description="move to destination machine" if="dest_folder_cnfg">
+  	         <!-- <if>
+  	      <equals arg1="${executeDeploy}" arg2="Y" />
+  	      <then>
+  	        <echo>Check if destination folder exists</echo>
+  	      <sshexec host="${dest_server}" username="infodba" password="xxxx" trust="yes" command="mkdir -p ${dest_folder_cnfg}">
+  	      </sshexec>
+  	      <scp trust="true" todir='infodba:xxxx@${dest_server}:"${dest_folder_cnfg}"'>
+  	          <fileset dir="${dest}/${module}/dist/config" />
+  	      </scp>
+  	             </then>
+  	 </if> -->
+  	  </target>
+  	  
+  	 <target name="copy_script" depends="copy_config" description="move to scripts folder" if="destination_folder_script">
+  	    <!-- <if>
+  	      <equals arg1="${executeDeploy}" arg2="Y" />
+  	    <then>
+  	      <echo>Move to scripts folder</echo>
+  	       <sshexec host="${dest_server}" username="infodba" password="xxxx" trust="yes" command="mkdir -p ${destination_folder_script}">
+  	       </sshexec>
+  	      <scp trust="true" todir='infodba:xxxx@${dest_server}:"${destination_folder_script}"'>
+  	        <fileset dir="${dest}/${module}/dist/scripts/">
+  	        <include name="**/*.pl"/>
+  	        </fileset>
+  	        </scp>
+  	      <scp trust="true" todir='infodba:xxxx@${dest_server}:"${destination_folder_script}"'>
+  	        <fileset dir="${dest}/${module}/dist/scripts/wnd">
+  	        <include name="**"/>
+  	        </fileset>
+  	      </scp>
+  	              </then>
+  	  </if> -->
+  	  </target>
+    
+  <target name="build" depends="copy_script">  
+    <echo> Script completed </echo>
+  </target>
+    
+  </project>
