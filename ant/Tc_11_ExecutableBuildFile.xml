@@ -153,8 +153,8 @@
           <linkerarg value="-delayload:libFnd0formulamgmt.dll " />
           <linkerarg value="-delayload:libFnd0audit_mgr.dll " />
    
-          <libset dir="${msdev.root}/VC/lib/amd64" libs="msvcprt,msvcrt, oldnames, kernel32,delayimp"/>
-        	<libset dir="${msdev.root}/PlatformSDK/Lib/x64" libs="uuid,wsock32,advapi32,winmm"/>
+          <libset dir="${msdev.root}/VC/lib/amd64" libs="msvcprt,msvcrt, oldnames,delayimp"/>
+        	<libset dir="${msdev.root}/PlatformSDK/Lib/x64" libs="uuid,wsock32,advapi32,winmm,kernel32"/>
     	  </linker>
     
     <!-- ########################################################################## -->
@@ -163,15 +163,15 @@
 
     <target name="SelectAndCompile" depends="iman-init">
         
-      <property name="common_obj_dir" value="${dest}/${module}/build/common"/>
+      <property name="common_obj_dir" value="${dest}/build/common"/>
       <mkdir dir="${common_obj_dir}"/>
             
       <!--compile common -->
       <for list="${outname}" param="execname" trim="true">
       	<sequential>
 			  <echo message = " compile common code"/>
-              <mkdir dir="${dest}/${module}/common/source/all"/>
-              <mkdir dir="${dest}/${module}/common/source/wintel"/>
+              <mkdir dir="${dest}/common/source/all"/>
+              <mkdir dir="${dest}/common/source/wintel"/>
               
             <antcall target="compileCommonCode">
                      <param name="common_obj_dir" value="${common_obj_dir}"/>
@@ -179,8 +179,8 @@
                
               <echo message = "copyproperty"/>
         
-                <copy filtering="true" todir="${dest}/${module}/dist/config">
-                <fileset dir="${dest}/${module}/common/config" casesensitive="no">
+                <copy filtering="true" todir="${dest}/dist/config">
+                <fileset dir="${dest}/common/config" casesensitive="no">
                   <exclude name="**/*.gif"/>
                   <exclude name="**/*.jpg"/>
                   <exclude name="**/*.bmp"/>
@@ -188,8 +188,8 @@
                 </fileset>
                 </copy>
           
-                <copy filtering="false" todir="${dest}/${module}/dist/config">
-                <fileset dir="${dest}/${module}/common/config" casesensitive="no">
+                <copy filtering="false" todir="${dest}/dist/config">
+                <fileset dir="${dest}/common/config" casesensitive="no">
                   <include name="**/*.gif"/>
                   <include name="**/*.jpg"/>
                   <include name="**/*.bmp"/>
@@ -202,11 +202,11 @@
       <for list="${outname}" param="execname" trim="true">
       	<sequential>
           <echo message = "execname = @{execname} "/>
-          <property name="obj_dir@{execname}" value="${dest}/${module}/build/@{execname}"/>
+          <property name="obj_dir@{execname}" value="${dest}/build/@{execname}"/>
           
           <mkdir dir="${obj_dir@{execname}}"/>
-          <mkdir dir="${dest}/${module}/@{execname}/source/all"/>
-          <mkdir dir="${dest}/${module}/@{execname}/include/all"/>
+          <mkdir dir="${dest}/@{execname}/source/all"/>
+          <mkdir dir="${dest}/@{execname}/include/all"/>
 
           <echo message = " call compile"/>
           
@@ -231,12 +231,12 @@
 
     <target name="compileCommonCode">
        <cc objdir="${common_obj_dir}" outtype="executable" failonerror="true" rebuild="false">
-         <fileset dir="${dest}/${module}/common/source/all" >
+         <fileset dir="${dest}/common/source/all" >
                <include name="**/*.c" />
                <include name="**/*.cpp" />
                <include name="**/*.cxx" />
          </fileset>
-         <fileset dir="${dest}/${module}/common/source/wintel" >
+         <fileset dir="${dest}/common/source/wintel" >
                <include name="**/*.c" />
                <include name="**/*.cpp" />
                <include name="**/*.cxx" />
@@ -247,7 +247,7 @@
           <includepath location="${iman.includecpp}"/>
           <includepath location="${msdev.root}/VC/include" />
           <includepath location="${msdev.root}/PlatformSDK/Include" />            
-          <includepath location="${dest}/${module}/common/include/all" if="common_all"/>
+          <includepath location="${dest}/common/include/all" if="common_all"/>
         </compiler>
     </cc>           
     </target>
@@ -255,7 +255,7 @@
     <target name="compileCode">
     <echo message = "execname = ${execname}"/>
        <cc objdir="${obj_dir}" outtype="executable" failonerror="true" rebuild="false">
-         <fileset dir="${dest}/${module}/${execname}/source/all" >
+         <fileset dir="${dest}/${execname}/source/all" >
                <include name="**/*.c" />
                <include name="**/*.cpp" />
                <include name="**/*.cxx" />
@@ -266,15 +266,15 @@
           <includepath location="${iman.includecpp}"/>
           <includepath location="${msdev.root}/VC/include" />
           <includepath location="${msdev.root}/PlatformSDK/Include" />
-          <includepath location="${dest}/${module}/${execname}/include/all" />
-          <includepath location="${dest}/${module}/${execname}/include/wintel" />
-          <includepath location="${dest}/${module}/common/include/all" if="common_all"/>        
+          <includepath location="${dest}/${execname}/include/all" />
+          <includepath location="${dest}/${execname}/include/wintel" />
+          <includepath location="${dest}/common/include/all" if="common_all"/>        
         </compiler>
       </cc>
     </target>
 
     <target name="executeLinker">        
-		<cc outtype="executable" outfile="${dest}/${module}/dist/${execname}" subsystem="console"  failonerror="true" rebuild="false">
+		<cc outtype="executable" outfile="${dest}/dist/${execname}" subsystem="console"  failonerror="true" rebuild="false">
         <linker extends="base-msvc-linker">
         <!-- <syslibset libs="${SYSLIBDEPENDENCE}" dir="D:/javateam/BuilderAgent6/${common_lib_folder}" if="SYSLIBDEPENDENCE"/> -->
           <fileset dir="${obj_dir}" >
@@ -283,7 +283,7 @@
           <fileset dir="${common_obj_dir}">
             <include name="*.obj" />
           </fileset>
-          <fileset dir="${dest}/${module}/common/lib" if="common_lib">
+          <fileset dir="${dest}/common/lib" if="common_lib">
                <include name="*.lib" />
           </fileset>            
           <fileset dir="${IMAN_ROOT_PATH}/lib" unless="exclude_oci_lib">
@@ -300,8 +300,8 @@
         </linker>
       </cc>
         <exec executable="${MSVS_ROOT}/PlatformSDK/bin/x64/mt" failonerror="true">
-          <arg line="-manifest ${dest}/${module}/dist/${execname}.exe.manifest"/>
-          <arg line="-outputresource:${dest}/${module}/dist/${execname}.exe"/>
+          <arg line="-manifest ${dest}/dist/${execname}.exe.manifest"/>
+          <arg line="-outputresource:${dest}/dist/${execname}.exe"/>
         </exec>  
     </target>
   	
@@ -315,9 +315,9 @@
   	        </sshexec>
   	        
   	      <echo>Copy on destination machine</echo>
-  	      <scp trust="true" file="${dest}/${module}/dist/${execname}.exe" todir='infodba:xxxx@${dest_server}:"${dest_folder}"' />
-  	      <scp trust="true" file="${dest}/${module}/dist/${execname}.pdb" todir='infodba:xxxx@${dest_server}:"${dest_folder}"' />
-  	      <scp trust="true" file="${dest}/${module}/dist/${execname}.exe.manifest" todir='infodba:xxxx@${dest_server}:"${dest_folder}"' />
+  	      <scp trust="true" file="${dest}/dist/${execname}.exe" todir='infodba:xxxx@${dest_server}:"${dest_folder}"' />
+  	      <scp trust="true" file="${dest}/dist/${execname}.pdb" todir='infodba:xxxx@${dest_server}:"${dest_folder}"' />
+  	      <scp trust="true" file="${dest}/dist/${execname}.exe.manifest" todir='infodba:xxxx@${dest_server}:"${dest_folder}"' />
   	      </then>
   	 </if>      
   	    </target>
@@ -335,7 +335,7 @@
   	      </sshexec>
   	    <echo> copy script to ${dest_server_bin}, ${dest_folder_bin} </echo>
   	    <scp trust="true" password="xxxx" todir="javateam@${dest_server_bin}:${dest_folder_bin}" >
-  	      <fileset dir="${dest}/${module}/dist/scripts/wnd"/>
+  	      <fileset dir="${dest}/dist/scripts/wnd"/>
   	    </scp>
   	        </then>
   	         
@@ -347,7 +347,7 @@
   	      </sshexec>
   	    <echo> copy script to ${dest_server_bin}, ${dest_folder_bin} </echo>
   	    <scp trust="true" password="xxxx" todir="javateam@${dest_server_bin}:${dest_folder_bin}" >
-  	      <fileset dir="${dest}/${module}/dist/scripts/wnd"/>
+  	      <fileset dir="${dest}/dist/scripts/wnd"/>
   	    </scp>
   	        </then>
   	 </elseif>
@@ -357,7 +357,7 @@
   	      </sshexec>
   	    <echo> copy script to ${dest_server_bin}, ${dest_folder_bin} </echo>
   	    <scp trust="true" password="xxxx" todir="javateam@${dest_server_bin}:${dest_folder_bin}" >
-  	      <fileset dir="${dest}/${module}/dist/scripts/wnd"/>
+  	      <fileset dir="${dest}/dist/scripts/wnd"/>
   	    </scp>
   	        </else>
 
@@ -373,7 +373,7 @@
   	      <sshexec host="${dest_server}" username="infodba" password="xxxx" trust="yes" command="mkdir -p ${dest_folder_cnfg}">
   	      </sshexec>
   	      <scp trust="true" todir='infodba:xxxx@${dest_server}:"${dest_folder_cnfg}"'>
-  	          <fileset dir="${dest}/${module}/dist/config" />
+  	          <fileset dir="${dest}/dist/config" />
   	      </scp>
   	             </then>
   	 </if>
@@ -387,12 +387,12 @@
   	       <sshexec host="${dest_server}" username="infodba" password="xxxx" trust="yes" command="mkdir -p ${destination_folder_script}">
   	       </sshexec>
   	      <scp trust="true" todir='infodba:xxxx@${dest_server}:"${destination_folder_script}"'>
-  	        <fileset dir="${dest}/${module}/dist/scripts/">
+  	        <fileset dir="${dest}/dist/scripts/">
   	        <include name="**/*.pl"/>
   	        </fileset>
   	        </scp>
   	      <scp trust="true" todir='infodba:xxxx@${dest_server}:"${destination_folder_script}"'>
-  	        <fileset dir="${dest}/${module}/dist/scripts/wnd">
+  	        <fileset dir="${dest}/dist/scripts/wnd">
   	        <include name="**"/>
   	        </fileset>
   	      </scp>

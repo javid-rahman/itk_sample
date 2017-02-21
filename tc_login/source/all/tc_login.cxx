@@ -7,7 +7,6 @@
 #include <tcinit/tcinit.h>
 #include <tc/tc_startup.h>
 #include <fclasses/tc_stdio.h>
-#include <tc/emh.h>
 
 void displayUsage();
 
@@ -17,7 +16,6 @@ int ITK_user_main(int argc,char *argv[]){
 	char *username;
 	char *passwd;
 	char *group;
-	char *error_string;
 	
 	username = ITK_ask_cli_argument("-u");
 	passwd = ITK_ask_cli_argument("-p");
@@ -35,8 +33,6 @@ int ITK_user_main(int argc,char *argv[]){
 		printf("\n Successfully logged in to Teamcenter... \n");
 	}else{
 		printf("\n Unexpected error in Teamcenter login.Please check with administrator \n");
-		EMH_ask_error_text(returnCode,&error_string);
-		printf("ERROR:%s \n",error_string);
 	}
 	
 	if(ITK_ask_cli_argument("-h") != NULL){
